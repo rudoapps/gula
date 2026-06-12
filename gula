@@ -65,6 +65,7 @@ source "$scripts_dir/support/network.sh"
 source "$scripts_dir/support/os.sh"
 source "$scripts_dir/support/validation.sh"
 source "$scripts_dir/support/bitbucket_repo.sh"
+source "$scripts_dir/support/claude_launcher.sh"
 source "$scripts_dir/agent/agent.sh"
 
 # list_branches function loaded from general_support.sh
@@ -432,11 +433,11 @@ create_project() {
 }
 
 
-# Verificar que se haya pasado un comando válido
+# Sin argumentos: analizar la carpeta, instalar las skills adecuadas del pool
+# en Claude Code y arrancar `claude`.
 if [ -z "${1:-}" ]; then
-  echo "Uso: $0 {chat|login|setup|logout|whoami|install|list|template|create|branches|status|validate|help} [opciones]"
-  echo "Usa '$0 --help' para más información."
-  exit 1
+  cleanup_temp_directory 2>/dev/null || true
+  launch_claude_with_skills
 fi
 
 # Procesar los argumentos
